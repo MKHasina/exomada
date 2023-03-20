@@ -26,7 +26,7 @@ module.exports = {
     },
     "production": {
         "server": {
-            "port": _PORT
+            "port": ""
         },
         "db": {
             "username": DBUSER,
