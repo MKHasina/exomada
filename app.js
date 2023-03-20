@@ -2,7 +2,6 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const sequelize = require('./src/db/sequelize');
 const config = require('./config/config');
-const cors = require('cors');
 
 const app = new express();
 const server = require('http').createServer(app);
@@ -11,7 +10,7 @@ const port = config.production.server._PORT || config.development.server._PORT;
 
 
 app
-    .use(cors({ origin: 'http://localhost:3000' }))
+
     .use(bodyParser.json())
 
 sequelize.initDb();
