@@ -29,11 +29,11 @@ module.exports = {
             "port": process.env.PORT
         },
         "db": {
-            "username": "root",
+            "username": "tune",
             "password": null,
             "database": "chat_exomada_db",
             "host": "127.0.0.1",
-            "dialect": "mariadb"
+            "dialect": "Postgres"
         }
     }
 }
