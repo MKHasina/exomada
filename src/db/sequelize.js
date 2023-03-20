@@ -4,12 +4,13 @@ const CensorModel = require('../models/cencorshi');
 const InboxrModel = require('../models/inbox');
 const MessageModel = require('../models/message');
 const ParticipeModel = require('../models/participe');
-const config = require('../../config/config').development.db;
+const env = process.env.NODE_ENV || "development";
+const config = require('../../config/config').env;
 
 
 
 
-const sequelize = new Sequelize(config.database, config.username, config.password, config);
+const sequelize = new Sequelize(config.db.database, config.db.username, config.db.password, config.db);
 
 const user = UserModel(sequelize, DataTypes);
 const inbox = InboxrModel(sequelize, DataTypes);
@@ -18,7 +19,7 @@ const participe = ParticipeModel(sequelize, DataTypes);
 const cencorshi = CensorModel(sequelize, DataTypes);
 
 const initDb = () => {
-    return sequelize.sync({ force: false })
+    return sequelize.sync()
         .then(_ => {
             /*user.create({
                 pseudo: "MKHasina",

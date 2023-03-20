@@ -1,11 +1,11 @@
 const bodyParser = require('body-parser');
 const express = require('express');
 const sequelize = require('./src/db/sequelize');
-const config = require('./config/config');
-
+const env = process.env || "development";
+const config = require('./config/config').env;
 const app = new express();
 const server = require('http').createServer(app);
-const port = config.production.server._PORT || config.development.server._PORT;
+const port = config.server._PORT
 
 
 
