@@ -29,11 +29,11 @@ module.exports = {
             "port": ""
         },
         "db": {
-            "username": DBUSER,
-            "password": MDP,
-            "database": DBNAME,
-            "host": HOSTNAME,
-            "dialect": DB
+            "username": process.env.DBUSER,
+            "password": process.env.MDP,
+            "database": process.env.DBNAME,
+            "host": process.env.HOSTNAME,
+            "dialect": process.env.DB
         }
     }
 }

@@ -4,7 +4,7 @@ const sequelize = require('./src/db/sequelize');
 const config = require('./config/config');
 const app = new express();
 const server = require('http').createServer(app);
-const port = process.env.PORT || 3007;
+const PORT = process.env.PORT || 3007;
 
 
 
@@ -38,4 +38,4 @@ app.use(({ res }) => {
     res.status(404).json({ message });
 })
 
-server.listen(port, () => (console.log('mety' + port)))
+server.listen(PORT, () => (console.log('mety' + PORT)))
