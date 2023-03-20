@@ -4,7 +4,7 @@ const sequelize = require('./src/db/sequelize');
 const config = require('./config/config');
 const app = new express();
 const server = require('http').createServer(app);
-const port = config.production.server._PORT || 3007;
+const port = process.env.PORT || 3007;
 
 
 
