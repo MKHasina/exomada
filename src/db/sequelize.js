@@ -4,13 +4,12 @@ const CensorModel = require('../models/cencorshi');
 const InboxrModel = require('../models/inbox');
 const MessageModel = require('../models/message');
 const ParticipeModel = require('../models/participe');
-const env = process.env.NODE_ENV || "development";
-const config = require('../../config/config').env;
+const config = require('../../config/config');
 
 
 
 
-const sequelize = new Sequelize(config.db.database, config.db.username, config.db.password, config.db);
+const sequelize = new Sequelize(config.production.db.database, config.production.db.username, config.production.db.password, config.production.db);
 
 const user = UserModel(sequelize, DataTypes);
 const inbox = InboxrModel(sequelize, DataTypes);
