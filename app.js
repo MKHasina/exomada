@@ -3,14 +3,17 @@ const express = require('express');
 const sequelize = require('./src/db/sequelize');
 const config = require('./config/config');
 const app = new express();
+const cors = require('cors');
 const server = require('http').createServer(app);
 const PORT = process.env.PORT || 3007;
+
 
 
 
 app
 
     .use(bodyParser.json())
+    .use(cors())
 
 sequelize.initDb();
 
