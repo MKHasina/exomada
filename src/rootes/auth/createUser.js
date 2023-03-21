@@ -10,9 +10,9 @@ module.exports = (app) => {
             .then(ide => max_id = UniD("20K23", ide))
             .catch(_ => max_id = UniD("20K23", "0"))
 
-
+        const roles = CDroles(req.body.roles);
         bcrypt.hash(req.body.mdp, 10)
-            .then(hash => user.create({ ...req.body, mdp: hash, user_uid: max_id, roles: CDroles(req.body.roles) }))
+            .then(hash => user.create({ ...req.body, mdp: hash, user_uid: max_id, roles: roles }))
             .then(User => {
                 const message = 'L\'utilisateur a bien été inserer.'
                 res.json({ message, data: User })
