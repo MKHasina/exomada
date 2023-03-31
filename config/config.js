@@ -9,7 +9,7 @@ module.exports = {
             "password": null,
             "database": "chat_exomada_db",
             "host": "127.0.0.1",
-            "dialect": "postgres"
+            "dialect": "mariadb"
         }
     },
     "test": {

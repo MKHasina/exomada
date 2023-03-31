@@ -10,8 +10,8 @@ module.exports = (sequelize, DataTypes) => {
             inbox_id: {
                 type: DataTypes.INTEGER,
             },
-            user_id: {
-                type: DataTypes.INTEGER,
+            user_uid: {
+                type: DataTypes.STRING,
             },
             message: {
                 type: DataTypes.STRING

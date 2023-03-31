@@ -6,6 +6,7 @@ const app = new express();
 const cors = require('cors');
 const server = require('http').createServer(app);
 const PORT = process.env.PORT || 3007;
+const { FindAllInboxes } = require('./src/rootes/message/FindAllInboxes');
 
 
 
@@ -20,22 +21,23 @@ sequelize.initDb();
 app.get('/', (req, res) => res.json("mety ve"));
 
 
-const io = require('socket.io')(server, {});
+const io = require('socket.io')(server, {
+    cors: true
+});
 
-io.on('connection', (socket) => {
-    socket.on('create-something', (value) => {
+require('./src/socket-io/socket-io')(io);
 
-        console.log(value)
-        socket.emit('foo', value);
-
-    })
-})
 
 
 require('./src/rootes/auth/createUser')(app);
 require('./src/rootes/auth/connexion')(app);
 require('./src/rootes/auth/findAllUsers')(app);
-//require('./src/rootes/message/createInbox')(app);
+require('./src/rootes/message/createInbox')(app);
+require('./src/rootes/message/FindInboxById')(app);
+require('./src/rootes/message/createMessage')(app);
+require('./src/rootes/user/FindOneUByUID')(app);
+FindAllInboxes(app);
+
 app.use(({ res }) => {
     const message = 'Impossble de trouver la ressource demandée! Vous povevez essayer une autre URL';
     res.status(404).json({ message });

@@ -5,20 +5,51 @@ const InboxrModel = require('../models/inbox');
 const MessageModel = require('../models/message');
 const ParticipeModel = require('../models/participe');
 const config = require('../../config/config');
+let sequelize;
 
 
+if (process.env.NODE_ENV === 'production') {
 
+    sequelize = new Sequelize(
+        config.production.db.database,
+        config.production.db.username,
+        config.production.db.password,
+        config.production.db);
+}
+else {
 
-const sequelize = new Sequelize(config.production.db.database, config.production.db.username, config.production.db.password, config.production.db);
+    sequelize = new Sequelize(
+        config.development.db.database,
+        config.development.db.username,
+        config.development.db.password,
+        config.development.db);
 
+}
 const user = UserModel(sequelize, DataTypes);
 const inbox = InboxrModel(sequelize, DataTypes);
 const chat = MessageModel(sequelize, DataTypes);
 const participe = ParticipeModel(sequelize, DataTypes);
 const cencorshi = CensorModel(sequelize, DataTypes);
 
+participe.hasMany(participe, {
+    as: 'p2',
+    foreignKey: 'inbox_id',
+    sourceKey: 'inbox_id'
+})
+inbox.hasMany(participe, {
+    as: 'p4',
+    foreignKey: 'inbox_id'
+});
+
+inbox.hasMany(chat, {
+    as: 'm3',
+    foreignKey: 'inbox_id'
+});
+
+
+
 const initDb = () => {
-    return sequelize.sync()
+    return sequelize.sync({ force: true })
         .then(_ => {
             /*user.create({
                 pseudo: "MKHasina",
@@ -35,5 +66,5 @@ const initDb = () => {
 }
 
 module.exports = {
-    initDb, user, inbox, chat, participe, cencorshi
+    initDb, user, inbox, chat, participe, cencorshi, sequelize
 }
