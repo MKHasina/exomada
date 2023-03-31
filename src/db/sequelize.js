@@ -49,9 +49,11 @@ inbox.hasMany(chat, {
 
 
 const initDb = () => {
-    return sequelize.sync({ force: true })
+    return sequelize.sync()
         .then(_ => {
-            /*user.create({
+            /*
+            { force: true }
+            user.create({
                 pseudo: "MKHasina",
                 mdp: "motdepasse",
                 email: "MKHasina@exomada.com",
