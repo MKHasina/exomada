@@ -20,9 +20,9 @@ exports.CDroles = (roles) => {
 
 
 }
-exports.messageReC = async (userUid) => {
+exports.messageReC = (userUid) => {
 
-    return await inbox.findAll({
+    return inbox.findAll({
         where: {
             id: {
                 [Op.in]: sequelize.literal(
