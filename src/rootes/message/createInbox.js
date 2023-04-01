@@ -37,48 +37,48 @@ module.exports = (app) => {
             })
                 .then(participes => {
                     let n_inb = '';
+                    console.log('teto angah')
                     //console.log(participes[0])
                     if (!participes[0]) {
-                        // console.log('aaa');
-                        inbox
-                            .create({
-                                name: "", user_uid: sender, state: 0
-                            })
+                        console.log('aaa');
+                        inbox.create({
+                            name: "", user_uid: sender, state: 0
+                        })
                             .then(inboxes => {
                                 n_inb = inboxes.id;
-                                participe
-                                    .create({ user_uid: sender, inbox_id: inboxes.id })
+
+                                participe.create({ user_uid: sender, inbox_id: inboxes.id })
                                     .then((sender) => {
-                                        message += `participant ajout ${sender.user_uid}`
+                                        message.push(`participant ajout ${sender.user_uid}`)
 
                                     })
                                     .catch((error) => {
-                                        mest += `erreur ajout ${sender.user_uid}`;
+                                        mest.push(`erreur ajout ${sender.user_uid}`);
                                         //      return res.json(error)
                                     });
 
                                 participe
                                     .create({
-                                        user_uid: recever,
-                                        inbox_id: inboxes.id
+                                        user_uid: recever, inbox_id: inboxes.id
                                     })
                                     .then((sender) => {
-                                        message += `participant ajout ${sender.user_uid}`
+                                        message.push(`participant ajout ${sender.user_uid}`);
 
                                     })
                                     .catch((error) => {
-                                        mest += `erreur ajout ${sender.user_uid}`;
+                                        mest.push(`erreur ajout ${sender.user_uid}`);
                                         //return res.status(500).json(error)
                                     });
 
                                 message += "inbox ajouter avec participant"
+                                console.log('create')
                                 console.log(n_inb)
                                 return res.json({ message, data: n_inb })
 
                             })
                             .catch(error => {
-                                mest = "tonga teto ar"
-
+                                mest.push("tonga teto ar");
+                                console.log(mest)
                                 return res.json({ mest, data: error })
                             })
 
@@ -102,7 +102,7 @@ module.exports = (app) => {
                     if (error instanceof ValidationError) {
                         return res.status(400).json({ message: error.message, data: error })
                     }
-                    const message = mest + 'La liste des client n\'a pas pu être récupérée. Réessayez dans quelques instaants.'
+                    const message = mest + 'Pas d\'inbox correspondant.'
                     res.status(500).json({ message, data: error })
                 })
 
@@ -188,25 +188,23 @@ module.exports = (app) => {
 
                     return res.status(500).json({ mest, data: error })
                 })
-
-
         }
-        /*  var max_id = 1;
-         user.max('id')
-             .then(ide => max_id = UniD("20K23", ide))
-             .catch(_ => max_id = UniD("20K23", "0"))
- 
- 
-         console.log(req.body)
-          user.create({ ...req.body, mdp: hash, user_uid: max_id,
-              roles: CDroles(req.body.roles) })
-          )
-         
-          .then(User => {
-              const message = 'L\'utilisateur a bien été inserer.'
-              res.json({ message, data: User })
-          })
-         
-          */
+
     })
-}
+}       /*  var max_id = 1;
+user.max('id')
+    .then(ide => max_id = UniD("20K23", ide))
+    .catch(_ => max_id = UniD("20K23", "0"))
+
+
+console.log(req.body)
+ user.create({ ...req.body, mdp: hash, user_uid: max_id,
+     roles: CDroles(req.body.roles) })
+ )
+
+ .then(User => {
+     const message = 'L\'utilisateur a bien été inserer.'
+     res.json({ message, data: User })
+ })
+
+ */
