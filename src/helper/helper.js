@@ -1,5 +1,6 @@
 const { participe, inbox, chat, sequelize } = require('../db/sequelize');
 const { Op } = require("sequelize");
+const NodeCache = require('node-cache');
 
 exports.UniD = (cle, id_max) => {
     return cle + "/" + ((isNaN(parseInt(id_max)) ? 0 : parseInt(id_max)) + 1);
@@ -48,3 +49,26 @@ exports.messageReC = (userUid) => {
     }
     )
 }
+
+exports.findInbox = async (sender, recever) => {
+    return await participe.findAll({
+        attributes: ['inbox_id',
+            [sequelize.literal('(SELECT COUNT(*) FROM participes AS p3 where p3.inbox_id = participe.inbox_id)'),
+                'count']],
+        where: {
+            user_uid: sender
+        },
+        include: [{
+            model: participe,
+            as: 'p2',
+            where: {
+                user_uid: recever
+            }
+        }],
+        having: sequelize.literal('count = 2')
+    })
+
+}
+
+
+exports.cache = new NodeCache({ stdTTL: 60, checkperiod: 120 });

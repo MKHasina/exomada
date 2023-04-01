@@ -1,108 +1,105 @@
 const { ValidationError, UniqueConstraintError } = require('sequelize')
-const { inbox, participe, sequelize } = require('../../db/sequelize')
+const { inbox, participe, sequelize } = require('../../db/sequelize');
+const { findInbox, cache } = require('../../helper/helper');
+
 module.exports = (app) => {
 
 
     app.post('/api/inbox', (req, res) => {
-        // console.log(req.body)
 
 
         const sender = req.body.userData.user_uid;//  "2K23/1" //
         const recever = req.body.listRecever[0].user_uid; //  "2K23/2"// 
 
-        //  console.log(sender);
-        // console.log(recever);
-
         let mest = '';
         let message = "";
 
         if (req.body.listRecever.length === 1) {
-            //   console.log(req.body)
 
-            participe.findAll({
-                attributes: ['inbox_id',
-                    [sequelize.literal('(SELECT COUNT(*) FROM participes AS p3 where p3.inbox_id = participe.inbox_id)'),
-                        'count']],
-                where: {
-                    user_uid: sender
-                },
-                include: [{
-                    model: participe,
-                    as: 'p2',
-                    where: {
-                        user_uid: recever
-                    }
-                }],
-                having: sequelize.literal('count = 2')
-            })
-                .then(participes => {
-                    let n_inb = '';
-                    //console.log(participes[0])
-                    if (!participes[0]) {
-                        console.log('aaa');
-                        inbox
-                            .create({
-                                name: "", user_uid: sender, state: 0
-                            })
-                            .then(inboxes => {
-                                n_inb = inboxes.id;
-                                participe
-                                    .create({ user_uid: sender, inbox_id: inboxes.id })
-                                    .then((sender) => {
-                                        message += `participant ajout ${sender.user_uid}`
+            const cachedData = cache.get(sender + recever);
 
-                                    })
-                                    .catch((error) => {
-                                        mest += `erreur ajout ${sender.user_uid}`;
-                                        //      return res.json(error)
-                                    });
+            if (cachedData !== undefined) {
+                const message = 'L\' utilisateur a été récuperer avec succès';
+                res.json({ message, data: cachedData });
 
-                                participe
-                                    .create({
-                                        user_uid: recever,
-                                        inbox_id: inboxes.id
-                                    })
-                                    .then((sender) => {
-                                        message += `participant ajout ${sender.user_uid}`
-
-                                    })
-                                    .catch((error) => {
-                                        mest += `erreur ajout ${sender.user_uid}`;
-                                        //return res.status(500).json(error)
-                                    });
-
-                                message += "inbox ajouter avec participant"
-                                return res.json({ message, data: n_inb })
-
-                            })
-                            .catch(error => {
-                                mest = "tonga teto ar"
-
-                                return res.json({ mest, data: error })
-                            })
+            } else {
+                findInbox(sender, recever)
+                    .then(participes => {
+                        setTimeout(() =>
+                            console.log("participes"), 3000
+                        )
+                        let n_inb = '';
 
 
-                    }
-                    else {
+                        if (!participes[0]) {
+                            console.log('aaa');
+                            inbox
+                                .create({
+                                    name: "", user_uid: sender, state: 0
+                                })
+                                .then(inboxes => {
+                                    n_inb = inboxes.id;
+                                    participe
+                                        .create({ user_uid: sender, inbox_id: inboxes.id })
+                                        .then((sender) => {
+                                            message += `participant ajout ${sender.user_uid}`
 
-                        console.log("ts le niertr");
-                        n_inb = participes[0].inbox_id;
-                        message += 'Chambre de discussion récupérer';
-                        return res.json({ message, data: n_inb });
-                    }
+                                        })
+                                        .catch((error) => {
+                                            mest += `erreur ajout ${sender.user_uid}`;
+                                            //      return res.json(error)
+                                        });
+
+                                    participe
+                                        .create({
+                                            user_uid: recever,
+                                            inbox_id: inboxes.id
+                                        })
+                                        .then((sender) => {
+                                            message += `participant ajout ${sender.user_uid}`
+
+                                        })
+                                        .catch((error) => {
+                                            mest += `erreur ajout ${sender.user_uid}`;
+                                            //return res.status(500).json(error)
+                                        });
+                                    cache.set(sender + recever, n_inb);
+                                    message += "inbox ajouter avec participant"
+                                    return res.json({ message, data: n_inb })
+
+                                })
+                                .catch(error => {
+                                    mest = "tonga teto ar"
+
+                                    return res.json({ mest, data: error })
+                                })
 
 
-                })
-                .catch(error => {
-                    if (error instanceof UniqueConstraintError) {
-                        return res.status(400).json({ message: error.message, data: error })
-                    }
-                    if (error instanceof ValidationError) {
-                        return res.status(400).json({ message: error.message, data: error })
-                    }
-                    const message = mest + 'La liste des client n\'a pas pu être récupérée. Réessayez dans quelques instaants.'
-                    res.status(500).json({ message, data: error })
-                })
+                        }
+                        else {
+
+                            console.log("ts le niertr");
+                            n_inb = participes[0].inbox_id;
+                            cache.set(sender + recever, n_inb);
+                            message += 'Chambre de discussion récupérer';
+                            return res.json({ message, data: n_inb });
+                        }
+
+
+
+
+                    })
+                    .catch((error) => {
+                        if (error instanceof UniqueConstraintError) {
+                            return res.status(400).json({ message: error.message, data: error })
+                        }
+                        if (error instanceof ValidationError) {
+                            return res.status(400).json({ message: error.message, data: error })
+                        }
+                        const message = mest + 'La liste des client n\'a pas pu être récupérée. Réessayez dans quelques instaants.'
+                        res.status(500).json({ message, data: error })
+                    })
+            }
 
             /*
         inbox.findAll({

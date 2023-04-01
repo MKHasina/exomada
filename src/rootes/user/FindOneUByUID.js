@@ -1,8 +1,5 @@
 const { user } = require('../../db/sequelize');
-
-const NodeCache = require('node-cache');
-const cache = new NodeCache({ stdTTL: 60, checkperiod: 120 });
-const { Op } = require("sequelize");
+const { cache } = require('../../helper/helper');
 
 module.exports = (app) => {
     app.post('/api/user/name', (req, res) => {
@@ -16,9 +13,6 @@ module.exports = (app) => {
             res.json({ message, data: cachedData });
 
         } else {
-
-
-            console.log("2222");
 
             user
                 .findOne({
