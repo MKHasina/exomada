@@ -89,6 +89,7 @@ module.exports = (app) => {
                         // console.log("ts le niertr");
                         n_inb = participes[0].inbox_id;
                         message += 'Chambre de discussion récupérer';
+                        console.log(n_inb)
                         return res.json({ message, data: n_inb });
                     }
 
