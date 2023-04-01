@@ -10,8 +10,8 @@ module.exports = (app) => {
         const sender = req.body.userData.user_uid;//  "2K23/1" //
         const recever = req.body.listRecever[0].user_uid; //  "2K23/2"// 
 
-        //  console.log(sender);
-        // console.log(recever);
+        console.log(sender);
+        console.log(recever);
 
         let mest = '';
         let message = "";
