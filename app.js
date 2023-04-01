@@ -14,7 +14,7 @@ const { FindAllInboxes } = require('./src/rootes/message/FindAllInboxes');
 app
 
     .use(bodyParser.json())
-    .use(cors())
+    .use(cors({ origin: 'https://exomada.netlify.app/' }))
 
 sequelize.initDb();
 
