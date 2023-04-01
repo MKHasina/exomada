@@ -49,7 +49,7 @@ inbox.hasMany(chat, {
 
 
 const initDb = () => {
-    return sequelize.sync({ force: true })
+    return sequelize.sync()
         .then(_ => {
             /*
             { force: true }
