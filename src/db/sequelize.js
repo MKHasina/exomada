@@ -35,7 +35,7 @@ participe.hasMany(participe, {
     as: 'p2',
     foreignKey: 'inbox_id',
     sourceKey: 'inbox_id'
-})
+});
 inbox.hasMany(participe, {
     as: 'p4',
     foreignKey: 'inbox_id'
@@ -46,27 +46,23 @@ inbox.hasMany(chat, {
     foreignKey: 'inbox_id'
 });
 
-
-
 const initDb = () => {
     return sequelize.sync()
-        .then(_ => {
-            /*
-            { force: true }
-            user.create({
-                pseudo: "MKHasina",
-                mdp: "motdepasse",
-                email: "MKHasina@exomada.com",
-                user_uid: "mk_1",
-                roles: 5000
-
-            }).then(pokemon => console.log(pokemon.toJSON()))
-*/
-            console.log('La base de donnée a bien été initialisée !')
-
-        })
+        .then(_ => { console.log('La base de donnée a bien été initialisée !') })
 }
 
 module.exports = {
     initDb, user, inbox, chat, participe, cencorshi, sequelize
 }
+
+/*
+           { force: true }
+           user.create({
+               pseudo: "MKHasina",
+               mdp: "motdepasse",
+               email: "MKHasina@exomada.com",
+               user_uid: "mk_1",
+               roles: 5000
+
+           }).then(pokemon => console.log(pokemon.toJSON()))
+*/
