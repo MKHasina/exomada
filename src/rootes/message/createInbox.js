@@ -7,7 +7,7 @@ module.exports = (app) => {
 
     app.post('/api/inbox', (req, res) => {
 
-
+        let casse = 1;
         const sender = req.body.userData.user_uid;//  "2K23/1" //
         const recever = req.body.listRecever[0].user_uid; //  "2K23/2"// 
 
@@ -23,11 +23,16 @@ module.exports = (app) => {
                 res.json({ message, data: cachedData });
 
             } else {
-                findInbox(sender, recever)
+                const part = findInbox(sender, recever)
+                while ((part) || (casse === 15)) {
+                    setTimeout(() =>
+                        console.log("miandry fa gasy"), 3000
+                    )
+                    casse++;
+                }
+                part
                     .then(participes => {
-                        setTimeout(() =>
-                            console.log("participes"), 3000
-                        )
+
                         let n_inb = '';
 
 
@@ -76,7 +81,7 @@ module.exports = (app) => {
 
 
                         }
-                        else {
+                        else if (participes[0].inbox_id) {
 
                             console.log("ts le niertr");
                             n_inb = participes[0].inbox_id;
