@@ -39,7 +39,7 @@ module.exports = (app) => {
                     let n_inb = '';
                     //console.log(participes[0])
                     if (!participes[0]) {
-                        // console.log('aaa');
+                        console.log('aaa');
                         inbox
                             .create({
                                 name: "", user_uid: sender, state: 0
@@ -85,7 +85,7 @@ module.exports = (app) => {
                     }
                     else {
 
-                        // console.log("ts le niertr");
+                        console.log("ts le niertr");
                         n_inb = participes[0].inbox_id;
                         message += 'Chambre de discussion récupérer';
                         return res.json({ message, data: n_inb });
