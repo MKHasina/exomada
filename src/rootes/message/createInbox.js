@@ -24,7 +24,7 @@ module.exports = (app) => {
 
             } else {
                 const part = findInbox(sender, recever)
-                while ((part) || (casse === 15)) {
+                while ((part) || (casse === 3)) {
                     setTimeout(() =>
                         console.log("miandry fa gasy"), 3000
                     )
