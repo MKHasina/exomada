@@ -26,11 +26,11 @@ module.exports = (app) => {
               } else {*/
                 const part = findInbox(sender, recever)
 
-                if (part) {
-                    setTimeout(() =>
-                        console.log("miandry fa gasy"), 6000
-                    )
-                }
+                /*  if (part) {
+                      setTimeout(() =>
+                          console.log("miandry fa gasy"), 1000
+                      )
+                  }*/
                 part
                     .then(participes => {
                         cache.set(sender + recever, participes);

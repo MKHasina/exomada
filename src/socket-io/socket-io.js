@@ -18,10 +18,8 @@ module.exports = (io) => {
 
             console.log(value)
             socket.to(value.inbox).timeout(3000).emit('foo', value);
-            setTimeout(() => {
-                console.log("5 secondes se sont écoulées depuis la réponse");
-            }, 5000);
-            socket.to(value.inbox).timeout(5000).emit('foory', value);
+
+            socket.to(value.inbox).timeout(6000).emit('foory', value);
 
         })
     })
