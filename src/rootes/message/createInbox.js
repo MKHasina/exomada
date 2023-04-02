@@ -33,83 +33,84 @@ module.exports = (app) => {
                 }
                 part
                     .then(participes => {
-                        cache.set(sender + recever, part);
+                        cache.set(sender + recever, participes);
                     })
             }
 
 
             let n_inb = '';
-            const cacheData1 = cache.get(sender + recever);
-            cacheData1.then(participes => {
-                if (!participes[0]) {
-                    console.log('aaa');
-                    inbox
-                        .create({
-                            name: "", user_uid: sender, state: 0
-                        })
-                        .then(inboxes => {
-                            n_inb = inboxes.id;
-                            participe
-                                .create({ user_uid: sender, inbox_id: inboxes.id })
-                                .then((sender) => {
-                                    message += `participant ajout ${sender.user_uid}`
 
-                                })
-                                .catch((error) => {
-                                    mest += `erreur ajout ${sender.user_uid}`;
-                                    //      return res.json(error)
-                                });
+            const participes = cache.get(sender + recever);
 
-                            participe
-                                .create({
-                                    user_uid: recever,
-                                    inbox_id: inboxes.id
-                                })
-                                .then((sender) => {
-                                    message += `participant ajout ${sender.user_uid}`
+            if (!participes[0]) {
+                console.log('aaa');
+                inbox
+                    .create({
+                        name: "", user_uid: sender, state: 0
+                    })
+                    .then(inboxes => {
+                        n_inb = inboxes.id;
+                        participe
+                            .create({ user_uid: sender, inbox_id: inboxes.id })
+                            .then((sender) => {
+                                message += `participant ajout ${sender.user_uid}`
 
-                                })
-                                .catch((error) => {
-                                    mest += `erreur ajout ${sender.user_uid}`;
-                                    //return res.status(500).json(error)
-                                });
-                            cache.set(sender + recever, n_inb);
-                            message += "inbox ajouter avec participant"
-                            return res.json({ message, data: n_inb })
+                            })
+                            .catch((error) => {
+                                mest += `erreur ajout ${sender.user_uid}`;
+                                //      return res.json(error)
+                            });
 
-                        })
-                        .catch(error => {
-                            mest = "tonga teto ar"
+                        participe
+                            .create({
+                                user_uid: recever,
+                                inbox_id: inboxes.id
+                            })
+                            .then((sender) => {
+                                message += `participant ajout ${sender.user_uid}`
 
-                            return res.json({ mest, data: error })
-                        })
+                            })
+                            .catch((error) => {
+                                mest += `erreur ajout ${sender.user_uid}`;
+                                //return res.status(500).json(error)
+                            });
+
+                        message += "inbox ajouter avec participant"
+                        return res.json({ message, data: n_inb })
+
+                    })
+                    .catch(error => {
+                        mest = "tonga teto ar"
+
+                        return res.json({ mest, data: error })
+                    })
 
 
+            }
+            else if (participes[0].inbox_id) {
+
+                console.log("ts le niertr");
+                n_inb = participes[0].inbox_id;
+
+                message += 'Chambre de discussion récupérer';
+                return res.json({ message, data: n_inb });
+            }
+
+
+
+
+
+            /*catch (error) {
+                if (error instanceof UniqueConstraintError) {
+                    return res.status(400).json({ message: error.message, data: error })
                 }
-                else if (participes[0].inbox_id) {
-
-                    console.log("ts le niertr");
-                    n_inb = participes[0].inbox_id;
-
-                    message += 'Chambre de discussion récupérer';
-                    return res.json({ message, data: n_inb });
+                if (error instanceof ValidationError) {
+                    return res.status(400).json({ message: error.message, data: error })
                 }
-
-
-
-
-            })
-                .catch((error) => {
-                    if (error instanceof UniqueConstraintError) {
-                        return res.status(400).json({ message: error.message, data: error })
-                    }
-                    if (error instanceof ValidationError) {
-                        return res.status(400).json({ message: error.message, data: error })
-                    }
-                    const message = mest + 'La liste des client n\'a pas pu être récupérée. Réessayez dans quelques instaants.'
-                    res.status(500).json({ message, data: error })
-                })
-
+                const message = mest + 'La liste des client n\'a pas pu être récupérée. Réessayez dans quelques instaants.'
+                res.status(500).json({ message, data: error })
+            }
+*/
 
 
 
