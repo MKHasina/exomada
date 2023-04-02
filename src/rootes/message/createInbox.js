@@ -42,7 +42,7 @@ module.exports = (app) => {
 
             const participes = cache.get(sender + recever);
 
-            if (!participes[0]) {
+            if (!participes) {
                 console.log('aaa');
                 inbox
                     .create({
