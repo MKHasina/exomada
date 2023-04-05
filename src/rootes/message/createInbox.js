@@ -26,6 +26,9 @@ module.exports = (app) => {
                     .then(participes => {
                         cache.set(sender + recever, participes);
                     })
+                    .catch((error) => {
+                        console.log(error)
+                    })
             }
 
 
@@ -33,7 +36,7 @@ module.exports = (app) => {
 
             const participes = cache.get(sender + recever);
             console.log(participes)
-            if (participes === undefined) {
+            if (parenticipes === undefined) {
                 const msg = 'Wait wait!';
                 return res.json({ msg, waiting: 3 })
             }
@@ -93,24 +96,9 @@ module.exports = (app) => {
             }
 
 
-
-
-
-            /*catch (error) {
-                if (error instanceof UniqueConstraintError) {
-                    return res.status(400).json({ message: error.message, data: error })
-                }
-                if (error instanceof ValidationError) {
-                    return res.status(400).json({ message: error.message, data: error })
-                }
-                const message = mest + 'La liste des client n\'a pas pu être récupérée. Réessayez dans quelques instaants.'
-                res.status(500).json({ message, data: error })
-            }
-*/
-
-
-
         }
+
+
         else {
             console.log('maro be');
             inbox
@@ -165,6 +153,17 @@ module.exports = (app) => {
     })
 }
 
+/*catch (error) {
+    if (error instanceof UniqueConstraintError) {
+        return res.status(400).json({ message: error.message, data: error })
+    }
+    if (error instanceof ValidationError) {
+        return res.status(400).json({ message: error.message, data: error })
+    }
+    const message = mest + 'La liste des client n\'a pas pu être récupérée. Réessayez dans quelques instaants.'
+    res.status(500).json({ message, data: error })
+}
+*/
 
 /*  console.log(cachedData)
                 const message = 'L\' inbox a été récuperer avec succès';
