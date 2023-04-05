@@ -63,10 +63,11 @@ exports.findInbox = (sender, recever) => {
             as: 'p2',
             where: {
                 user_uid: recever
-            },
-            required: true
+            }
+            // ,
+            //required: true
         }],
-        group: ['inbox_id'],
+        // group: ['inbox_id'],
         having: sequelize.literal('count = 2')
     })
 
