@@ -35,6 +35,7 @@ require('./src/rootes/auth/findAllUsers')(app);
 require('./src/rootes/message/createInbox')(app);
 require('./src/rootes/message/FindInboxById')(app);
 require('./src/rootes/message/createMessage')(app);
+require('./src/rootes/message/FiPartbyInb')(app);
 require('./src/rootes/user/FindOneUByUID')(app);
 FindAllInboxes(app);
 

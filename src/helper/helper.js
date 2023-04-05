@@ -50,8 +50,8 @@ exports.messageReC = (userUid) => {
     )
 }
 
-exports.findInbox = async (sender, recever) => {
-    return await participe.findAll({
+exports.findInbox = (sender, recever) => {
+    return participe.findOne({
         attributes: ['inbox_id',
             [sequelize.literal('(SELECT COUNT(*) FROM participes AS p3 where p3.inbox_id = participe.inbox_id)'),
                 'count']],
@@ -63,8 +63,10 @@ exports.findInbox = async (sender, recever) => {
             as: 'p2',
             where: {
                 user_uid: recever
-            }
+            },
+            required: true
         }],
+        group: ['inbox_id'],
         having: sequelize.literal('count = 2')
     })
 
@@ -91,4 +93,4 @@ exports.findInbox = async (sender, recever) => {
 };*/
 
 
-exports.cache = new NodeCache({ stdTTL: 60, checkperiod: 120 });
+exports.cache = new NodeCache({ stdTTL: 120, checkperiod: 180 });

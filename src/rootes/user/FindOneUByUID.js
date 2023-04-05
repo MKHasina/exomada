@@ -3,7 +3,7 @@ const { cache } = require('../../helper/helper');
 
 module.exports = (app) => {
     app.post('/api/user/name', (req, res) => {
-        console.log(req.body)
+
         const Wsear = req.body.userUId
 
         const cachedData = cache.get(Wsear);

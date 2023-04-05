@@ -19,18 +19,9 @@ module.exports = (app) => {
             const cachedData = cache.get(sender + recever);
 
             if (cachedData === undefined) {
-                /*  console.log(cachedData)
-                  const message = 'L\' inbox a été récuperer avec succès';
-                 // res.json({ message, data: cachedData });
-  
-              } else {*/
+
                 const part = findInbox(sender, recever)
 
-                /*  if (part) {
-                      setTimeout(() =>
-                          console.log("miandry fa gasy"), 1000
-                      )
-                  }*/
                 part
                     .then(participes => {
                         cache.set(sender + recever, participes);
@@ -41,8 +32,13 @@ module.exports = (app) => {
             let n_inb = '';
 
             const participes = cache.get(sender + recever);
+            console.log(participes)
+            if (participes === undefined) {
+                const msg = 'Wait wait!';
+                return res.json({ msg, waiting: 3 })
+            }
 
-            if (!participes) {
+            if (!participes?.inbox_id) {
                 console.log('aaa');
                 inbox
                     .create({
@@ -87,10 +83,10 @@ module.exports = (app) => {
 
 
             }
-            else if (participes[0].inbox_id) {
+            else if (participes?.inbox_id) {
 
                 console.log("ts le niertr");
-                n_inb = participes[0].inbox_id;
+                n_inb = participes.inbox_id;
 
                 message += 'Chambre de discussion récupérer';
                 return res.json({ message, data: n_inb });
@@ -168,6 +164,18 @@ module.exports = (app) => {
         }
     })
 }
+
+
+/*  console.log(cachedData)
+                const message = 'L\' inbox a été récuperer avec succès';
+               // res.json({ message, data: cachedData });
+ 
+               if (part) {
+                   setTimeout(() =>
+                       console.log("miandry fa gasy"), 1000
+                   )
+               }
+            } else {*/
 
 /*  var max_id = 1;
  user.max('id')

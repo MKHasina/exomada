@@ -1,8 +1,6 @@
-const { ValidationError, UniqueConstraintError } = require('sequelize')
-const { user, chat } = require('../../db/sequelize')
-const bcrypt = require('bcrypt');
-const { UniD, CDroles } = require('../../helper/helper');
-
+const { ValidationError, UniqueConstraintError } = require('sequelize');
+const { chat } = require('../../db/sequelize');
+//set state inbox mbola tsy vita
 module.exports = (app) => {
     app.post('/api/message', (req, res) => {
 
