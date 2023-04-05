@@ -36,7 +36,7 @@ module.exports = (app) => {
 
             const participes = cache.get(sender + recever);
             console.log(participes)
-            if (parenticipes === undefined) {
+            if (participes === undefined) {
                 const msg = 'Wait wait!';
                 return res.json({ msg, waiting: 3 })
             }
