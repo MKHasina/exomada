@@ -36,12 +36,12 @@ module.exports = (app) => {
 
             const participes = cache.get(sender + recever);
             console.log(participes)
-            if (participes === undefined) {
+            if (participes[0] === undefined) {
                 const msg = 'Wait wait!';
                 return res.json({ msg, waiting: 3 })
             }
 
-            if (!participes?.inbox_id) {
+            if (!participes[0]?.inbox_id) {
                 console.log('aaa');
                 inbox
                     .create({
@@ -86,10 +86,10 @@ module.exports = (app) => {
 
 
             }
-            else if (participes?.inbox_id) {
+            else if (participes[0]?.inbox_id) {
 
                 console.log("ts le niertr");
-                n_inb = participes.inbox_id;
+                n_inb = participes[0].inbox_id;
 
                 message += 'Chambre de discussion récupérer';
                 return res.json({ message, data: n_inb });

@@ -51,7 +51,7 @@ exports.messageReC = (userUid) => {
 }
 
 exports.findInbox = (sender, recever) => {
-    return participe.findOne({
+    return participe.findAll({
         attributes: ['inbox_id',
             [sequelize.literal('(SELECT COUNT(*) FROM participes AS p3 where p3.inbox_id = participe.inbox_id)'),
                 'count']],
@@ -63,11 +63,10 @@ exports.findInbox = (sender, recever) => {
             as: 'p2',
             where: {
                 user_uid: recever
-            }
-            // ,
-            //required: true
+            },
+            required: true
         }],
-        // group: ['inbox_id'],
+        group: ['inbox_id'],
         having: sequelize.literal('count = 2')
     })
 
