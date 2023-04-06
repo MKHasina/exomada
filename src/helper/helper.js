@@ -50,29 +50,73 @@ exports.messageReC = (userUid) => {
     )
 }
 
-exports.findInbox = (sender, recever) => {
+exports.findInbox = (sender) => {
     return participe.findAll({
-        attributes: ['inbox_id',
-            [sequelize.literal('(SELECT COUNT(*) FROM participes AS p3 where p3.inbox_id = participe.inbox_id)'),
-                'count']],
+        attributes: ['inbox_id'],
         where: {
             user_uid: sender
         },
         include: [{
             model: participe,
-            as: 'p2',
-            where: {
-                user_uid: recever
-            },
-            required: true
-        }],
-        group: ['inbox_id'],
-        having: sequelize.literal('count = 2')
+            as: 'p2'
+        }]
     })
 
 }
+exports.insertInbox = (sender, recever) => {
+    let mest = '';
+    let message = "";
+    let me = "";
+    let n_inb = '';
+    inbox
+        .create({
+            name: "", user_uid: sender, state: 0
+        })
+        .then(inboxes => {
+            n_inb = { data: inboxes.id };
+            participe
+                .create({ user_uid: sender, inbox_id: inboxes.id })
+                .then((sender) => {
+                    message += `participant ajout ${sender.user_uid}`
 
-/*exports.findInbox = async (sender, receiver) => {
+                })
+                .catch((error) => {
+                    mest += `erreur ajout ${sender.user_uid}`;
+                    //      return res.json(error)
+                });
+
+            participe
+                .create({
+                    user_uid: recever,
+                    inbox_id: inboxes.id
+                })
+                .then((sender) => {
+                    message += `participant ajout ${sender.user_uid}`
+
+                })
+                .catch((error) => {
+                    mest += `erreur ajout ${sender.user_uid}`;
+                    //return res.status(500).json(error)
+                });
+
+            message += "inbox ajouter avec participant"
+            me = message;
+
+        })
+        .catch(error => {
+            mest = "tonga teto ar";
+            me = mest;
+            n_inb = error;
+        })
+
+    return ({ me, n_inb })
+}
+
+/*
+,
+            [sequelize.literal('(SELECT COUNT(*) FROM participes AS p3 where p3.inbox_id = participe.inbox_id)'),
+                'count']
+exports.findInbox = async (sender, receiver) => {
     const result = await participe.findAll({
         attributes: ['inbox_id', [sequelize.fn('COUNT', sequelize.col('p2.id')), 'count']],
         where: {

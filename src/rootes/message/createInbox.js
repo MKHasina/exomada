@@ -1,6 +1,6 @@
 const { ValidationError, UniqueConstraintError } = require('sequelize')
 const { inbox, participe, sequelize } = require('../../db/sequelize');
-const { findInbox, cache } = require('../../helper/helper');
+const { findInbox, cache, insertInbox } = require('../../helper/helper');
 
 module.exports = (app) => {
 
@@ -8,92 +8,42 @@ module.exports = (app) => {
     app.post('/api/inbox', (req, res) => {
 
 
-        const sender = req.body.userData.user_uid;//  "2K23/1" //
-        const recever = req.body.listRecever[0].user_uid; //  "2K23/2"// 
-
+        const sender = req.body.userData.user_uid;   //"2K23/1" //
+        const recever = req.body.listRecever[0].user_uid;  //"2K23/2"// 
+        console.log(sender)
+        console.log(recever)
         let mest = '';
         let message = "";
+        let n_inb = '';
+        //
 
         if (req.body.listRecever.length === 1) {
 
-            const cachedData = cache.get(sender + recever);
+            findInbox(sender)
+                .then((participes) => {
+                    if (participes[0]?.inbox_id !== undefined) {
+                        console.log(participes)
 
-            if (cachedData === undefined) {
+                        const participe = participes?.find(par => ((par.p2.length === 2) && (par.p2.find(pa => pa.user_uid === recever))))
+                        if (participe) {
+                            console.log("aaa")
 
-                const part = findInbox(sender, recever)
+                            res.json({ data: participe.inbox_id })
+                        }
+                        else {
+                            message = "inbox créer"
+                            const inbo = insertInbox(sender, recever)
+                            res.json(inbo);
+                        }
+                    }
+                    else {
+                        message = "inbox créer"
+                        const inbo = insertInbox(sender, recever)
+                        res.json(inbo);
+                    }
+                }
 
-                part
-                    .then(participes => {
-                        cache.set(sender + recever, participes);
-                    })
-                    .catch((error) => {
-                        console.log(error)
-                    })
-            }
-
-
-            let n_inb = '';
-
-            const participes = cache.get(sender + recever);
-            console.log(participes)
-            if (participes[0] === undefined) {
-                const msg = 'Wait wait!';
-                return res.json({ msg, waiting: 3 })
-            }
-
-            if (!participes[0]?.inbox_id) {
-                console.log('aaa');
-                inbox
-                    .create({
-                        name: "", user_uid: sender, state: 0
-                    })
-                    .then(inboxes => {
-                        n_inb = inboxes.id;
-                        participe
-                            .create({ user_uid: sender, inbox_id: inboxes.id })
-                            .then((sender) => {
-                                message += `participant ajout ${sender.user_uid}`
-
-                            })
-                            .catch((error) => {
-                                mest += `erreur ajout ${sender.user_uid}`;
-                                //      return res.json(error)
-                            });
-
-                        participe
-                            .create({
-                                user_uid: recever,
-                                inbox_id: inboxes.id
-                            })
-                            .then((sender) => {
-                                message += `participant ajout ${sender.user_uid}`
-
-                            })
-                            .catch((error) => {
-                                mest += `erreur ajout ${sender.user_uid}`;
-                                //return res.status(500).json(error)
-                            });
-
-                        message += "inbox ajouter avec participant"
-                        return res.json({ message, data: n_inb })
-
-                    })
-                    .catch(error => {
-                        mest = "tonga teto ar"
-
-                        return res.json({ mest, data: error })
-                    })
-
-
-            }
-            else if (participes[0]?.inbox_id) {
-
-                console.log("ts le niertr");
-                n_inb = participes[0].inbox_id;
-
-                message += 'Chambre de discussion récupérer';
-                return res.json({ message, data: n_inb });
-            }
+                )
 
 
         }
@@ -154,14 +104,14 @@ module.exports = (app) => {
 }
 
 /*catch (error) {
-    if (error instanceof UniqueConstraintError) {
-        return res.status(400).json({ message: error.message, data: error })
-    }
-    if (error instanceof ValidationError) {
-        return res.status(400).json({ message: error.message, data: error })
-    }
-    const message = mest + 'La liste des client n\'a pas pu être récupérée. Réessayez dans quelques instaants.'
-    res.status(500).json({ message, data: error })
+if (error instanceof UniqueConstraintError) {
+return res.status(400).json({ message: error.message, data: error })
+}
+if (error instanceof ValidationError) {
+return res.status(400).json({ message: error.message, data: error })
+}
+const message = mest + 'La liste des client n\'a pas pu être récupérée. Réessayez dans quelques instaants.'
+res.status(500).json({ message, data: error })
 }
 */
 

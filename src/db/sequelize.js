@@ -37,6 +37,7 @@ participe.hasMany(participe, {
     foreignKey: 'inbox_id',
     sourceKey: 'inbox_id'
 });
+
 inbox.hasMany(participe, {
     as: 'p4',
     foreignKey: 'inbox_id'
@@ -46,6 +47,7 @@ inbox.hasMany(chat, {
     as: 'm3',
     foreignKey: 'inbox_id'
 });
+
 
 const initDb = () => {
     return sequelize.sync()
