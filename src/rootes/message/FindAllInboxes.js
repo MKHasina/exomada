@@ -2,7 +2,7 @@
 
 const { messageReC } = require('../../helper/helper');
 
-exports.FindAllInboxes = (app) => {
+module.exports = (app) => {
 
     app.post('/api/inboxes', (req, res) => {
 

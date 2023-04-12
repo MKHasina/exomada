@@ -1,18 +1,14 @@
-const bodyParser = require('body-parser');
 const express = require('express');
-const sequelize = require('./src/db/sequelize');
-const config = require('./config/config');
 const app = new express();
-const cors = require('cors');
 const server = require('http').createServer(app);
+
+const sequelize = require('./src/db/sequelize');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+
 const PORT = process.env.PORT || 3007;
-const { FindAllInboxes } = require('./src/rootes/message/FindAllInboxes');
-
-
-
 
 app
-
     .use(bodyParser.json())
     .use(cors({ origin: true }))
 
@@ -27,17 +23,17 @@ const io = require('socket.io')(server, {
 
 require('./src/socket-io/socket-io')(io);
 
-
-
 require('./src/rootes/auth/createUser')(app);
 require('./src/rootes/auth/connexion')(app);
 require('./src/rootes/auth/findAllUsers')(app);
+require('./src/rootes/auth/updateUser')(app);
 require('./src/rootes/message/createInbox')(app);
 require('./src/rootes/message/FindInboxById')(app);
 require('./src/rootes/message/createMessage')(app);
 require('./src/rootes/message/FiPartbyInb')(app);
 require('./src/rootes/user/FindOneUByUID')(app);
-FindAllInboxes(app);
+require('./src/rootes/message/FindAllInboxes')(app);
+
 
 app.use(({ res }) => {
     const message = 'Impossble de trouver la ressource demandée! Vous povevez essayer une autre URL';

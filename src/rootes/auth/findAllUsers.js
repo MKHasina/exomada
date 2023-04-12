@@ -1,8 +1,9 @@
 const { user } = require('../../db/sequelize');
 const { Op } = require("sequelize");
+const auth = require('./auth');
 
 module.exports = (app) => {
-    app.post('/api/users', (req, res) => {
+    app.post('/api/users', auth, (req, res) => {
         const queryerData = req.body.user_uid;
         const Wsearch = req.query.name
         user

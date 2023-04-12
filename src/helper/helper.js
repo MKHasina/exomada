@@ -1,6 +1,8 @@
 const { participe, inbox, chat, sequelize } = require('../db/sequelize');
 const { Op } = require("sequelize");
 const NodeCache = require('node-cache');
+const nodemailer = require("nodemailer");
+const Mailgen = require('mailgen');
 
 exports.UniD = (cle, id_max) => {
     return cle + "/" + ((isNaN(parseInt(id_max)) ? 0 : parseInt(id_max)) + 1);
@@ -137,4 +139,56 @@ exports.findInbox = async (sender, receiver) => {
 };*/
 
 
-exports.cache = new NodeCache({ stdTTL: 120, checkperiod: 180 });
+exports.cache = new NodeCache({ stdTTL: 600, checkperiod: 180 });
+
+exports.genEmail = (userEmail, response, Subject) => {
+    //env. pass email
+    let config =
+    {
+        service: 'gmail',
+        auth: {
+            user: 'mk.one.rh@gmail.com',
+            pass: 'dnfcfotznewupogr'
+        }
+    }
+    let transporter = nodemailer.createTransport(config);
+
+    let MailGenerator = new Mailgen({
+        theme: "default",
+        product: {
+            name: "Equipe Exomada",
+            link: 'https://exomada.netlify.app/'
+        }
+    })
+
+
+
+    let mail = MailGenerator.generate(response)
+
+    let emailText = MailGenerator.generatePlaintext(response);
+
+    let message = {
+
+        to: userEmail,
+        subject: Subject,
+        html: mail,
+        text: emailText,
+        from: {
+            name: 'Support Exomada',
+            email: 'mk.one.rh@gmail.com'
+        }
+
+    }
+
+    transporter.sendMail(message).then(() => {
+        return {
+            msg: "you should receive an email"
+        }
+
+    })
+        .catch(error => {
+            return { error }
+        })
+
+    //res.status(201).json('getBill Successfully..');
+}

@@ -2,11 +2,19 @@ const { user } = require('../../db/sequelize');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const privateKey = require('./cles_prive');
+const { Op } = require('sequelize');
 
 module.exports = (app) => {
     app.post('/api/login', (req, res) => {
         user
-            .findOne({ where: { pseudo: req.body.pseudo } })
+            .findOne({
+                where: {
+                    [Op.or]: [
+                        { pseudo: req.body.pseudo },
+                        { email: req.body.pseudo }
+                    ]
+                }
+            })
             .then(User => {
                 if (!User) {
                     const message = 'L\'utilisateur demanddé n\'existe pas';

@@ -1,8 +1,10 @@
 const jwt = require('jsonwebtoken')
-const privateKey = require('../auth/private_key')
+const privateKey = require('../auth/cles_prive')
 
 module.exports = (req, res, next) => {
-  const authorizationHeader = req.headers.authorization
+  const authorizationHeader = req.headers['x-auth-token']
+  // const authorizationHeader = req.headers.authorization
+  console.log(authorizationHeader)
 
   if (!authorizationHeader) {
     const message = `Vous n'avez pas fourni de jeton d'authentification. Ajoutez-en un dans l'en-tête de la requête.`
@@ -17,7 +19,7 @@ module.exports = (req, res, next) => {
     }
 
     const userId = decodedToken.userId
-    if (req.body.userId && req.body.userId !== userId) {
+    if (req.body.user_uid && req.body.user_uid !== userId) {
       const message = `L'identifiant de l'utilisateur est invalide.`
       res.status(401).json({ message })
     } else {
