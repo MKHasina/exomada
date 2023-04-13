@@ -24,7 +24,7 @@ module.exports = (app) => {
                 const roles = CDroles(cachedData.roles);
                 bcrypt.hash(cachedData.mdp, 10)
                     .then(
-                        hash => user.create({ ...req.body, mdp: hash, user_uid: max_id, roles: roles }))
+                        hash => user.create({ ...cachedData, mdp: hash, user_uid: max_id, roles: roles }))
                     .then(User => {
                         const message = 'L\'utilisateur a bien été inserer.'
                         const mdp = cachedData.mdp;
