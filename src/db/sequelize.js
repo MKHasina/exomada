@@ -32,11 +32,25 @@ const participe = ParticipeModel(sequelize, DataTypes);
 const cencorshi = CensorModel(sequelize, DataTypes);
 
 
+participe.hasMany(participe, {
+    as: 'p2',
+    foreignKey: 'inbox_id',
+    sourceKey: 'inbox_id'
+});
 
+inbox.hasMany(participe, {
+    as: 'p4',
+    foreignKey: 'inbox_id'
+});
+
+inbox.hasMany(chat, {
+    as: 'm3',
+    foreignKey: 'inbox_id'
+});
 
 
 const initDb = () => {
-    return sequelize.sync({ force: true })
+    return sequelize.sync({ force: false })
         .then(_ => { console.log('La base de donnée a bien été initialisée !') })
 }
 
