@@ -3,16 +3,18 @@ module.exports = (sequelize, DataTypes) => {
         {
             id: {
                 allowNull: false,
-                autoIncrement: true,
                 primaryKey: true,
-                type: DataTypes.INTEGER
+                type: DataTypes.UUID,
+                defaultValue: sequelize.UUIDV4
             },
             inbox_id: {
-                type: DataTypes.INTEGER
+                type: DataTypes.UUID,
+                defaultValue: sequelize.UUIDV4
 
             },
             user_uid: {
-                type: DataTypes.STRING
+                type: DataTypes.UUID,
+                defaultValue: sequelize.UUIDV4
 
             }
 

@@ -10,7 +10,7 @@ module.exports = (app) => {
         const offset = 0;
 
 
-        messageReC(req.body.user_uid)
+        messageReC(req.body.id)
             .then(inb => {
                 res.json(inb);
             }

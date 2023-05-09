@@ -4,8 +4,12 @@ const bcrypt = require('bcrypt');
 const { UniD, CDroles, cache, genEmail } = require('../../helper/helper');
 const { emailConfirmationKey } = require('./cles_mail');
 const mailBody = require('../../models/verifyEmail');
+const { v4: uuidv4 } = require('uuid');
 
 module.exports = (app) => {
+    function generateUniqueId() {
+        return uuidv4();
+    }
     app.post('/api/user', (req, res) => {
         if (req.query?.s) {
             const cachedData = cache.get(req.query.s);
@@ -20,11 +24,11 @@ module.exports = (app) => {
                 user.max('id')
                     .then(ide => max_id = UniD("2K23", ide))
                     .catch(_ => max_id = UniD("2K23", "0"))
-
+                const id = generateUniqueId();
                 const roles = CDroles(cachedData.roles);
                 bcrypt.hash(cachedData.mdp, 10)
                     .then(
-                        hash => user.create({ ...cachedData, mdp: hash, user_uid: max_id, roles: roles }))
+                        hash => user.create({ ...cachedData, id: id, mdp: hash, user_uid: max_id, roles: roles }))
                     .then(User => {
                         const message = 'L\'utilisateur a bien été inserer.'
                         const mdp = cachedData.mdp;
@@ -63,8 +67,8 @@ module.exports = (app) => {
             })
                 .then(user => {
                     if (user) {
-                        console.log("l' adresse email est déja utilisé")
-                        res.status(409).json({ msg: "l' adresse email est déja utilisé" })
+                        // console.log("l' adresse email est déja utilisé")
+                        return res.status(409).json({ msg: "l' adresse email est déja utilisé" })
                     }
                     else {
                         const emailKey = emailConfirmationKey();
@@ -74,7 +78,7 @@ module.exports = (app) => {
                         cache.set(emailKey, useCred);
                         const GEml = genEmail(req.body.email, mailBody(emailKey), subject)
 
-                        res.json(GEml);
+                        return res.json(GEml);
                     }
                 })
                 .catch(error => console.log(error));

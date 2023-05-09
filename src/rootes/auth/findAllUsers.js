@@ -4,16 +4,16 @@ const auth = require('./auth');
 
 module.exports = (app) => {
     app.post('/api/users', auth, (req, res) => {
-        const queryerData = req.body.user_uid;
-        const Wsearch = req.query.name
+        const queryerData = req.body.id;
+        const Wsearch = req.query.name;
         user
             .findAll({
-                attributes: ['pseudo', 'user_uid'],
+                attributes: ['pseudo', 'id'],
                 where: {
                     [Op.and]: [
 
                         {
-                            user_uid: {
+                            id: {
                                 [Op.not]: queryerData
                             }
                         }, {

@@ -3,6 +3,7 @@ const { Op } = require("sequelize");
 const NodeCache = require('node-cache');
 const nodemailer = require("nodemailer");
 const Mailgen = require('mailgen');
+const { v4: uuidv4 } = require('uuid');
 
 exports.UniD = (cle, id_max) => {
     return cle + "/" + ((isNaN(parseInt(id_max)) ? 0 : parseInt(id_max)) + 1);
@@ -66,18 +67,23 @@ exports.findInbox = (sender) => {
 
 }
 exports.insertInbox = (sender, recever) => {
+    function generateUniqueId() {
+        return uuidv4();
+    }
     let mest = '';
     let message = "";
     let me = "";
     let n_inb = '';
+    const inboxId = generateUniqueId();
     inbox
         .create({
-            name: "", user_uid: sender, state: 0
+            id: inboxId, name: "", user_uid: sender, state: 0
         })
         .then(inboxes => {
             n_inb = { data: inboxes.id };
+            const partId = generateUniqueId();
             participe
-                .create({ user_uid: sender, inbox_id: inboxes.id })
+                .create({ id: partId, user_uid: sender, inbox_id: inboxes.id })
                 .then((sender) => {
                     message += `participant ajout ${sender.user_uid}`
 
@@ -86,18 +92,19 @@ exports.insertInbox = (sender, recever) => {
                     mest += `erreur ajout ${sender.user_uid}`;
                     //      return res.json(error)
                 });
-
+            const partUId = generateUniqueId();
             participe
                 .create({
+                    id: partUId,
                     user_uid: recever,
                     inbox_id: inboxes.id
                 })
                 .then((sender) => {
-                    message += `participant ajout ${sender.user_uid}`
+                    message += `participant ajout ${sender.id}`
 
                 })
                 .catch((error) => {
-                    mest += `erreur ajout ${sender.user_uid}`;
+                    mest += `erreur ajout ${sender.id}`;
                     //return res.status(500).json(error)
                 });
 

@@ -16,9 +16,9 @@ module.exports = (app) => {
 
             user
                 .findOne({
-                    attributes: ['pseudo', 'user_uid'],
+                    attributes: ['pseudo', 'id'],
                     where: {
-                        user_uid: Wsear
+                        id: Wsear
                     }
 
                 })

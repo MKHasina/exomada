@@ -31,7 +31,7 @@ module.exports = (app) => {
 
                         const token = jwt.sign(
                             {
-                                userId: User.user_uid
+                                userId: User.id
                             },
                             privateKey,
                             {

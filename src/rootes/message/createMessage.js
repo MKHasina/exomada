@@ -1,16 +1,20 @@
 const { ValidationError, UniqueConstraintError } = require('sequelize');
 const { chat } = require('../../db/sequelize');
+const { v4: uuidv4 } = require('uuid');
 //set state inbox mbola tsy vita
 module.exports = (app) => {
+    function generateUniqueId() {
+        return uuidv4();
+    }
     app.post('/api/message', (req, res) => {
 
         // console.log(req.body.userData)
 
-        const inboxId = req.body.inboxId
+        const inboxId = req.body.value.inbox
         const messageE = req.body.value.message//"Salut!"//req.body.roles;
-        const sender = req.body.userData.user_uid;
-
-        chat.create({ inbox_id: inboxId, user_uid: sender, message: messageE })
+        const sender = req.body.userData.id;
+        const id = generateUniqueId();
+        chat.create({ id: id, inbox_id: inboxId, user_uid: sender, message: messageE })
             .then(User => {
                 const message = 'L\'utilisateur a bien été inserer.'
                 res.json({ message, data: User })
