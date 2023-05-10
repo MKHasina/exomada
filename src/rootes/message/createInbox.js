@@ -19,28 +19,38 @@ module.exports = (app) => {
         let message = "";
         let n_inb = '';
         //
+        const aoait = async(sender, recever)=>{
+
+            const inbo = await insertInbox(sender, recever)
+          
+           await  res.json(inbo);
+        }
 
         if (req.body.listRecever.length === 1) {
 
+        console.log('uuuuuuuuuuu')
             findInbox(sender)
                 .then((participes) => {
 
-                    if (participes[0]?.inbox_id !== undefined) {
-                        const participe = participes?.find(par => ((par.p2.length === 2) && (par.p2.find(pa => pa.user_uid === recever))))
+                    if (participes[0] !== undefined) {
+                        const participe = participes?.find(par => 
+            ((par.p2.length === 2) && (par.p2.find(pa => pa.user_uid === recever))))
                         if (participe) {
+                            console.log('aaaaaaaaaaaaaaaaa')
                             res.json({ data: participe.inbox_id })
                         }
                         else {
-                            message = "inbox créer"
-                            const inbo = insertInbox(sender, recever)
-                            res.json(inbo);
+                            console.log('iiiiiiiiiiiiii')
+                      
+                       
+                        aoait(sender, recever);
                         }
                     }
                     else {
-                        message = "inbox créer"
-                        const inbo = insertInbox(sender, recever)
-                        res.json(inbo);
-
+                        console.log('iiiiiiiiiiiiii')
+                       
+                       
+                        aoait(sender, recever);
                     }
                 }
 

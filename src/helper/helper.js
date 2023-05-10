@@ -75,12 +75,13 @@ exports.insertInbox = (sender, recever) => {
     let me = "";
     let n_inb = '';
     const inboxId = generateUniqueId();
-    inbox
+    return inbox
         .create({
             id: inboxId, name: "", user_uid: sender, state: 0
         })
         .then(inboxes => {
-            n_inb = { data: inboxes.id };
+            n_inb =  inboxes.id ;
+           
             const partId = generateUniqueId();
             participe
                 .create({ id: partId, user_uid: sender, inbox_id: inboxes.id })
@@ -110,15 +111,17 @@ exports.insertInbox = (sender, recever) => {
 
             message += "inbox ajouter avec participant"
             me = message;
+            return { me,  data:n_inb }
 
         })
         .catch(error => {
             mest = "tonga teto ar";
             me = mest;
             n_inb = error;
+            return { me,  data: n_inb }
         })
 
-    return ({ me, n_inb })
+    
 }
 
 /*

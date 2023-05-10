@@ -50,7 +50,7 @@ inbox.hasMany(chat, {
 
 
 const initDb = () => {
-    return sequelize.sync({ force: false })
+    return sequelize.sync({ force:0})
         .then(_ => { console.log('La base de donnée a bien été initialisée !') })
 }
 
