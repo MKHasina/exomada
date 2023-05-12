@@ -4,7 +4,7 @@ const NodeCache = require('node-cache');
 const nodemailer = require("nodemailer");
 const Mailgen = require('mailgen');
 const { v4: uuidv4 } = require('uuid');
-const config = require('../../config/config');
+const configue = require('../../config/config');
 
 exports.UniD = (cle, id_max) => {
 
@@ -143,8 +143,8 @@ exports.genEmail = (userEmail, response, Subject) => {
 
         service: 'gmail',
         auth: {
-            user: config.production.server.email,
-            pass: config.production.server.password
+            user: configue.production.server.email,
+            pass: configue.production.server.password
         }
     }
 
