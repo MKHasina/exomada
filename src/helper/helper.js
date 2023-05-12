@@ -4,21 +4,26 @@ const NodeCache = require('node-cache');
 const nodemailer = require("nodemailer");
 const Mailgen = require('mailgen');
 const { v4: uuidv4 } = require('uuid');
+const config = require('../../config/config');
 
 exports.UniD = (cle, id_max) => {
+
     return cle + "/" + ((isNaN(parseInt(id_max)) ? 0 : parseInt(id_max)) + 1);
 }
+
 exports.CDroles = (roles) => {
+
     if (roles === 5000) {
+
         return 411;
-    }
-    if (roles === 2001) {
+    }else if (roles === 2001) {
+
         return 71;
-    }
-    if (roles === 6666) {
+    }else if (roles === 6666) {
+
         return 401;
-    }
-    {
+    }else{
+
         return 404;
     }
 
@@ -38,7 +43,6 @@ exports.messageReC = (userUid) => {
             model: chat,
             as: 'm3',
             where: {
-
                 created: {
 
                     [Op.in]: sequelize.literal(' (SELECT MAX(created) FROM messages AS m4 WHERE m4.inbox_id = m3.inbox_id)')
@@ -54,7 +58,9 @@ exports.messageReC = (userUid) => {
 }
 
 exports.findInbox = (sender) => {
+
     return participe.findAll({
+
         attributes: ['inbox_id'],
         where: {
             user_uid: sender
@@ -67,46 +73,52 @@ exports.findInbox = (sender) => {
 
 }
 exports.insertInbox = (sender, recever) => {
-    function generateUniqueId() {
-        return uuidv4();
-    }
+
     let mest = '';
     let message = "";
     let me = "";
     let n_inb = '';
     const inboxId = generateUniqueId();
+
+    function generateUniqueId() {
+
+        return uuidv4();
+    }
+    
     return inbox
         .create({
+
             id: inboxId, name: "", user_uid: sender, state: 0
         })
         .then(inboxes => {
             n_inb =  inboxes.id ;
            
             const partId = generateUniqueId();
-            participe
-                .create({ id: partId, user_uid: sender, inbox_id: inboxes.id })
+            participe.create({
+                    id: partId, user_uid: sender, inbox_id: inboxes.id 
+                })
                 .then((sender) => {
-                    message += `participant ajout ${sender.user_uid}`
 
+                    message += `participant ajout ${sender.user_uid}`
                 })
                 .catch((error) => {
+
                     mest += `erreur ajout ${sender.user_uid}`;
-                    //      return res.json(error)
                 });
             const partUId = generateUniqueId();
-            participe
-                .create({
+            participe.create({
+
                     id: partUId,
                     user_uid: recever,
                     inbox_id: inboxes.id
                 })
                 .then((sender) => {
-                    message += `participant ajout ${sender.id}`
 
+                    message += `participant ajout ${sender.id}`
                 })
                 .catch((error) => {
+
                     mest += `erreur ajout ${sender.id}`;
-                    //return res.status(500).json(error)
                 });
 
             message += "inbox ajouter avec participant"
@@ -115,55 +127,31 @@ exports.insertInbox = (sender, recever) => {
 
         })
         .catch(error => {
+
             mest = "tonga teto ar";
             me = mest;
             n_inb = error;
             return { me,  data: n_inb }
-        })
-
-    
+        })  
 }
-
-/*
-,
-            [sequelize.literal('(SELECT COUNT(*) FROM participes AS p3 where p3.inbox_id = participe.inbox_id)'),
-                'count']
-exports.findInbox = async (sender, receiver) => {
-    const result = await participe.findAll({
-        attributes: ['inbox_id', [sequelize.fn('COUNT', sequelize.col('p2.id')), 'count']],
-        where: {
-            user_uid: sender
-        },
-        include: [{
-            model: participe,
-            as: 'p2',
-            where: {
-                user_uid: receiver
-            }
-        }],
-        group: ['participe.inbox_id'],
-        having: sequelize.literal('count = 2')
-    });
-
-    return result;
-};*/
-
 
 exports.cache = new NodeCache({ stdTTL: 600, checkperiod: 180 });
 
 exports.genEmail = (userEmail, response, Subject) => {
-    //env. pass email
-    let config =
-    {
+   
+    let config = {
+
         service: 'gmail',
         auth: {
-            user: 'mk.one.rh@gmail.com',
-            pass: 'dnfcfotznewupogr'
+            user: config.production.server.email,
+            pass: config.production.server.password
         }
     }
+
     let transporter = nodemailer.createTransport(config);
 
     let MailGenerator = new Mailgen({
+
         theme: "default",
         product: {
             name: "Equipe Exomada",
@@ -191,14 +179,13 @@ exports.genEmail = (userEmail, response, Subject) => {
     }
 
     transporter.sendMail(message).then(() => {
+
         return {
             msg: "you should receive an email"
         }
-
     })
-        .catch(error => {
-            return { error }
-        })
+    .catch(error => {
 
-    //res.status(201).json('getBill Successfully..');
+            return { error }
+    })
 }

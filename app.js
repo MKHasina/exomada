@@ -5,8 +5,9 @@ const server = require('http').createServer(app);
 const sequelize = require('./src/db/sequelize');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const config = require('./config/config');
 
-const PORT = process.env.PORT || 3007;
+const PORT = config.production.server.port || 3007;
 
 app
     .use(bodyParser.json())
@@ -40,4 +41,4 @@ app.use(({ res }) => {
     res.status(404).json({ message });
 })
 
-server.listen(PORT, () => (console.log('mety' + PORT)))
+server.listen(PORT, () => (console.log('Lancer port:' + PORT)))

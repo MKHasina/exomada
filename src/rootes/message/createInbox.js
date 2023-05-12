@@ -28,27 +28,22 @@ module.exports = (app) => {
 
         if (req.body.listRecever.length === 1) {
 
-        console.log('uuuuuuuuuuu')
             findInbox(sender)
                 .then((participes) => {
 
                     if (participes[0] !== undefined) {
                         const participe = participes?.find(par => 
-            ((par.p2.length === 2) && (par.p2.find(pa => pa.user_uid === recever))))
+                            ((par.p2.length === 2) && (par.p2.find(pa => pa.user_uid === recever))))
                         if (participe) {
-                            console.log('aaaaaaaaaaaaaaaaa')
+                            
                             res.json({ data: participe.inbox_id })
                         }
                         else {
-                            console.log('iiiiiiiiiiiiii')
-                      
-                       
+                         
                         aoait(sender, recever);
                         }
                     }
                     else {
-                        console.log('iiiiiiiiiiiiii')
-                       
                        
                         aoait(sender, recever);
                     }

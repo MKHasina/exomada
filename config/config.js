@@ -26,7 +26,9 @@ module.exports = {
     },
     "production": {
         "server": {
-            "port": ""
+            "port": process.env.PORT,
+            "password":process.env.EMAILPWD,
+            "email":process.env.EMAIL
         },
         "db": {
             "username": process.env.DBUSER,
