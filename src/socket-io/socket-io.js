@@ -21,6 +21,15 @@ module.exports = (io) => {
             socket.to(value.inbox).timeout(3000).emit('foo', value);
 
         })
+
+         socket.on('sendVideo', (videoData) => {
+    // Diffusion de la vidéo reçue à tous les autres participants
+    const stream = new MediaStream();
+    const videoTrack = new MediaStreamTrack({ kind: 'video' });
+    stream.addTrack(videoTrack);
+
+    socket.broadcast.emit('receiveVideo', stream);
+  });
     })
 
 }

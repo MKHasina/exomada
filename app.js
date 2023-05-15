@@ -34,6 +34,7 @@ require('./src/rootes/message/createMessage')(app);
 require('./src/rootes/message/FiPartbyInb')(app);
 require('./src/rootes/user/FindOneUByUID')(app);
 require('./src/rootes/message/FindAllInboxes')(app);
+require('./src/rootes/message/downFileById')(app);
 
 
 app.use(({ res }) => {
