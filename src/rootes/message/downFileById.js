@@ -9,6 +9,7 @@ try{
         const filePath = path.join(__dirname, '../../image');
         const inboxPath = path.join(filePath, '/',inboxId);
         const messagePath = path.join(inboxPath, '/',messageId);
+        console.log (messagePath)
         res.sendFile(messagePath);
     }catch(error){ 
                     const message = 'L\'utilisateur n\'a pas pus être connecté. Réessayez dans quelques instants.';

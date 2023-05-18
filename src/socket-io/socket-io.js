@@ -24,11 +24,9 @@ module.exports = (io) => {
 
          socket.on('sendVideo', (videoData) => {
     // Diffusion de la vidéo reçue à tous les autres participants
-    const stream = new MediaStream();
-    const videoTrack = new MediaStreamTrack({ kind: 'video' });
-    stream.addTrack(videoTrack);
+            console.log("0120")
 
-    socket.broadcast.emit('receiveVideo', stream);
+    socket.broadcast.emit('receiveVideo', videoData);
   });
     })
 
